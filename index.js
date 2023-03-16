@@ -2,9 +2,24 @@ const http = require("http");
 const fs = require("fs");
 
 http.createServer((req, res) => {
-    fs.readFile(`${__dirname}/pages/contact-me.html`,"utf-8", (err, data) => {
+    let path = `${__dirname}/pages`;
+    switch(req.url) {
+        case "/":
+            path += "/index.html";
+            break;
+        case "/about": 
+            path += "/about.html";
+            break;
+        case "/contact":
+            path += "/contact-me.html";
+            break;
+        default: 
+            path += "/404.html";
+            break;
+    }    
+    fs.readFile(path, "utf-8", (err, data) => {
         if (err) {
-            throw new Error(err);
+            console.log(err);
         }
         res.end(data);
     })
