@@ -2,24 +2,36 @@ const http = require("http");
 const fs = require("fs");
 
 http.createServer((req, res) => {
-    let path = `${__dirname}/pages`;
+    let contentType = "text/html";
+    let file = `${__dirname}/pages`;
     switch(req.url) {
         case "/":
-            path += "/index.html";
+            file += "/index.html";
+            res.statusCode = 200;
             break;
         case "/about": 
-            path += "/about.html";
+            file += "/about.html";
+            res.statusCode = 200;
             break;
         case "/contact":
-            path += "/contact-me.html";
+            file += "/contact-me.html";
+            res.statusCode = 200;
             break;
+        case "/style.css":
+            file += "/css/style.css";
+            res.statusCode = 200;
+            contentType = "text/css";
+            break;    
         default: 
-            path += "/404.html";
+            file += "/404.html";
+            res.statusCode = 404;
             break;
     }    
-    fs.readFile(path, "utf-8", (err, data) => {
+    res.setHeader("Content-Type", contentType);
+    fs.readFile(file, "utf-8", (err, data) => {
         if (err) {
             console.log(err);
+            res.end();
         }
         res.end(data);
     })
